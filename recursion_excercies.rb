@@ -311,8 +311,8 @@ def greedy_make_change(amount, coins=[25, 10, 5, 1])
     change.flatten
 end 
 
-p greedy_make_change(39)
-p greedy_make_change(14, [10, 7, 1])
+# p greedy_make_change(39)
+# p greedy_make_change(14, [10, 7, 1])
 
 # To make_better_change, we only take one coin at a time and never rule out 
 # denominations that we've already used. This allows each coin to be available 
@@ -330,5 +330,22 @@ p greedy_make_change(14, [10, 7, 1])
 # Keep track of the best solution and return it at the end.
 
 def make_better_change(amount, coins=[25, 10, 5, 1])
+    return [] if amount <= 0
+    sorted_coins = coins.sort!.reverse
+    
+    possible_change = []
+    
+    sorted_coins.each do |coin|
+        next if coin > amount
+        remainder = amount - coin
+        change = [coin] + make_better_change(remainder, sorted_coins)
+        if possible_change.empty? || change.length < possible_change.length
+            possible_change = change
+        end
+    end
 
+    possible_change
 end 
+
+p make_better_change(39)
+p make_better_change(14, [10, 7, 1])
